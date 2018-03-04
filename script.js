@@ -1,276 +1,475 @@
-// Lecture: Variables
+/////////////////////////////
+// Lecture: Function constructor
 /*
-var name = 'John';
-console.log(name);
+var john = {
+    name: 'John',
+    yearOfBirth: 1990,
+    job: 'teacher'
+};
 
-var lastName = 'Smith';
-console.log(lastName);
+var Person = function(name, yearOfBirth, job) {
+    this.name = name;
+    this.yearOfBirth = yearOfBirth;
+    this.job = job;
+}
 
-var age = 26;
-console.log(age)
+Person.prototype.calculateAge  = function() {
+    console.log(2016 - this.yearOfBirth);
+};
 
-var fullAge = true;
-console.log(fullAge);
+Person.prototype.lastName = 'Smith';
+
+var john = new Person('John', 1990, 'teacher');
+var jane = new Person('Jane', 1969, 'designer');
+var mark = new Person('Mark', 1948, 'retired');
+
+john.calculateAge();
+jane.calculateAge();
+mark.calculateAge();
+
+console.log(john.lastName);
+console.log(jane.lastName);
+console.log(mark.lastName);
 */
 
+
+
+/////////////////////////////
+// Lecture: Object.create
 /*
-// Lecture: Variables 2
-var name = 'John';
-var age = 26;
+var personProto = {
+    calculateAge: function() {
+        console.log(2016 - this.yearOfBirth);
+    }
+};
 
-//console.log(name + age);
-//console.log(age + age);
+var john = Object.create(personProto);
+john.name = 'John';
+john.yearOfBirth = 1990;
+john.job = 'teacher';
 
-var job, isMarried;
-
-//console.log(job);
-job = "teacher"
-isMarried = false;
-
-console.log(name + ' is a ' + age + ' year old '  + job + '. Is he married? ' + isMarried +'.')
-
-age = 'Thirty six';
-job = 'driver';
-
-console.log(name + ' is a ' + age + ' year old '  + job + '. Is he married? ' + isMarried +'.')
-
-//var lastName = prompt('what is the last name?');
-//console.log(lastName);
-
-alert(name + ' is a ' + age + ' year old '  + job + '. Is he married? ' + isMarried +'.')
+var jane = Object.create(personProto, {
+    name: { value: 'Jane' },
+    yearOfBirth: { value: 1969 },
+    job: { value: 'designer' }
+});
 */
 
-// Lecture: Operators
+
+
+/////////////////////////////
+// Lecture: Primitives vs objects
 /*
-var now = 2016;
-var birthYear = now - 26;
-birthYear = now - 26 * 2;
+// Primitives
+var a = 23;
+var b = a;
+a = 46;
+console.log(a);
+console.log(b);
 
 
-console.log(birthYear);
 
+// Objects
+var obj1 = {
+    name: 'John',
+    age: 26
+};
+var obj2 = obj1;
+obj1.age = 30;
+console.log(obj1.age);
+console.log(obj2.age);
 
-var ageJohn = 34;
-var ageMark = 30;
+// Functions
+var age = 27;
+var obj = {
+    name: 'Jonas',
+    city: 'Lisbon'
+};
 
-ageJohn = ageMark = (3 + 5) * 4 - 6;
-//ageJohn = ageMark = 26
-//ageJohn = 26
-console.log(ageJohn);
-console.log(ageMark);
-ageJohn++;
-// means ageJohn = ageJohn + 1
-ageMark *= 2;
-// means ageMark = ageMark * 2
-console.log(ageJohn);
-console.log(ageMark);
+function change(a, b) {
+    a = 30;
+    b.city = 'San Francisco';
+}
+
+change(age, obj);
+
+console.log(age);
+console.log(obj.city);
 */
 
-/////////////////////////////////////////////////////
-// lecture: if/else statements
+
+
+/////////////////////////////
+// Lecture: Passing functions as arguments
 /*
-var name = 'John';
-var age = 26;
-var isMaried = 'yes';
+var years = [1990, 1965, 1937, 2005, 1998];
 
-if (isMaried === 'yes') {
-	console.log( name+' is Married');
-} else {
-	console.log(name+' will be married soon');
+function arrayCalc(arr, fn) {
+    var arrRes = [];
+    for (var i = 0; i < arr.length; i++) {
+        arrRes.push(fn(arr[i]));
+    }
+    return arrRes;
 }
 
-isMaried = true;
-
-if (isMaried){
-	console.log('YES');
-} else {
-	console.log('NO');
+function calculateAge(el) {
+    return 2016 - el;
 }
 
-if (isMaried){
-	console.log('YES');
+function isFullAge(el) {
+    return el >= 18;
 }
 
-if (23 === '23') {
-	console.log('Something');
-}
-*/
-// type coercion if == and not type coercion if ===
-// in order to avoid bugs we always use ===
-
-//////////////////////////////////////////////////
-
-// Lecture: boolean logic and switch
-/*
-var age = 20;
-
-if(age < 20){
-	console.log('John is a teenager');
-} else if (age >= 20 && age < 30) {
-	console.log('John is a young man');
-} else {
-	console.log('John is an old man');
+function maxHeartRate(el) {
+    if (el >= 18 && el <= 81) {
+        return Math.round(206.9 - (0.67 * el));
+    } else {
+        return -1;
+    }
 }
 
-var job = prompt('what does john do');
 
+var ages = arrayCalc(years, calculateAge);
+var fullAges = arrayCalc(ages, isFullAge);
+var rates = arrayCalc(ages, maxHeartRate);
 
-switch (job) {
-	case "teacher":
-		console.log("john teaches kid");
-		break;
-	case "driver":
-		console.log("john drives a cab in lisbon");
-		break;
-	case "cop":
-		console.log("John fights crime");
-		break;
-	default:
-		console.log("john does something else");
-}
+console.log(ages);
+console.log(rates);
 */
 
-////////////////////////////////////////////////////
-// CODING CHALLANGE 1
 
+
+/////////////////////////////
+// Lecture: Functions returning functions
 /*
-
-John and a friend invented a simple game where the player with the
-highest value of his height (in cm) plus five time his age wins
-
-1. create Variables for the hieghts and ages of the two friends and assign
-them some values
-
-2. Calculate their scores
-3. Decide who wins and print the winner to the console. Include score
-in the string that you output to the console. Don't forget that there can be
-a draw (both player with the same score)
-
-4 EXTRA: Add a third player and now decide who wins. Hint: you will need
-the && opertor to take the decision. If you can't solve this one, just watch the
-solution
-
-*/
-/*
-var markHieght = 76;
-var markAge = 20;
-var johnHeight = 75;
-var johnAge = 20;
-var jakeHieght = 100;
-var jakeAge = 20;
-var jakeScore = jakeHieght + jakeAge * 5;
-var markScore = markHieght + markAge * 5;
-var johnScore = johnHeight + johnAge * 5;
-
-console.log(jakeScore);
-console.log(johnScore);
-console.log(markScore);
-console.log(johnScore > jakeScore)
-console.log(johnScore > markScore && johnScore > jakeScore);
-
-
-	if (johnScore > markScore && johnScore > jakeScore){
-		console.log('John Score is '+johnScore+' So john wins!');
+function interviewQuestion(job) {
+    if (job === 'designer') {
+        return function(name) {
+            console.log(name + ', can you please explain what UX design is?');
+        }
+    } else if (job === 'teacher') {
+        return function(name) {
+            console.log('What subject do you teach, ' + name + '?');
+        }
+    } else {
+        return function(name) {
+            console.log('Hello ' + name + ', what do you do?');
+        }
+    }
 }
-	else if (markScore > johnScore && markScore > jakeScore) {
-		console.log('Mark Score is '+markScore+' So Mark wins!');
-}
-	else if (jakeScore > johnScore && jakeScore > markScore){
-		console.log('Jake Score is '+jakeScore+' So Jake wins!');
-}
-	else
-	console.log('it\'s a draw!');
+
+var teacherQuestion = interviewQuestion('teacher');
+var designerQuestion = interviewQuestion('designer');
+
+
+teacherQuestion('John');
+designerQuestion('John');
+designerQuestion('jane');
+designerQuestion('Mark');
+designerQuestion('Mike');
+
+interviewQuestion('teacher')('Mark');
 */
 
-///////////////////////////////////////////////
-// Lecture: Functions
+
+
+/////////////////////////////
+// Lecture: IIFE
 /*
-function calAge(yearofbirth) {
-		var age = 2017 - yearofbirth;
-		return age;
+function game() {
+    var score = Math.random() * 10;
+    console.log(score >= 5);
 }
+game();
 
-var johnAge = calAge(1990);
+
+(function () {
+    var score = Math.random() * 10;
+    console.log(score >= 5);
+})();
+
+//console.log(score);
 
 
-function yearsUntilRetirement(name, year) {
-		var age = calAge(year);
-		var retirement = 65 - age;
-		if (retirement >= 0) {
-					console.log(name +' retires in '+retirement+' years ');
-	} else {
-					console.log(name +' has already retired');
-	}
-
-}
-
-yearsUntilRetirement('John', 1990);
-yearsUntilRetirement('Mike', 1976);
-yearsUntilRetirement('Aslam', 1950);
-yearsUntilRetirement('Zakir', 1965);
+(function (goodLuck) {
+    var score = Math.random() * 10;
+    console.log(score >= 5 - goodLuck);
+})(5);
 */
 
-// Functions that supposed to tell us if person is allowed on a roller coaster
+
+
+/////////////////////////////
+// Lecture: Closures
 /*
-
-function CalculateAge(yearofbirth) {
-			var age = 2017 - yearofbirth;
-			return age;
+function retirement(retirementAge) {
+    var a = ' years left until retirement.';
+    return function(yearOfBirth) {
+        var age = 2016 - yearOfBirth;
+        console.log((retirementAge - age) + a);
+    }
 }
 
-function Permissible(name, height, yearofbirth) {
-			var age = CalculateAge(yearofbirth);
-			if  (height >= 150 && age > 15) {
-					console.log(name+" is Permissible");
-			} else {
-					console.log(name+" Not Permissible");
-			}
+var retirementUS = retirement(66);
+var retirementGermany = retirement(65);
+var retirementIceland = retirement(67);
+
+retirementGermany(1990);
+retirementUS(1990);
+retirementIceland(1990);
+
+//retirement(66)(1990);
+
+
+function interviewQuestion(job) {
+    return function(name) {
+        if (job === 'designer') {
+            console.log(name + ', can you please explain what UX design is?');
+        } else if (job === 'teacher') {
+            console.log('What subject do you teach, ' + name + '?');
+        } else {
+            console.log('Hello ' + name + ', what do you do?');
+        }
+    }
 }
 
-
-
-Permissible('Hasan', 150, 1992)
-Permissible('Zain', 150, 2005)
-Permissible('Taha', 150, 1992)
+interviewQuestion('teacher')('John');
 */
-////////////////////////////////////////////
-// Lecture: Statements and Expressions
+
+
+
+/////////////////////////////
+// Lecture: Bind, call and apply
 /*
-function someFunc(par) {
-	// code
-}
-// This is a statement
-//////////////
+var john = {
+    name: 'John',
+    age: 26,
+    job: 'teacher',
+    presentation: function(style, timeOfDay) {
+        if (style === 'formal') {
+            console.log('Good ' + timeOfDay + ', Ladies and gentlemen! I\'m ' +  this.name + ', I\'m a ' + this.job + ' and I\'m ' + this.age + ' years old.');
+        } else if (style === 'friendly') {
+            console.log('Hey! What\'s up? I\'m ' +  this.name + ', I\'m a ' + this.job + ' and I\'m ' + this.age + ' years old. Have a nice ' + timeOfDay + '.');
+        }
+    }
+};
 
-var someFun = function(par) {
-	// code
+var emily = {
+    name: 'Emily',
+    age: 35,
+    job: 'designer'
+};
+
+john.presentation('formal', 'morning');
+
+john.presentation.call(emily, 'friendly', 'afternoon');
+
+//john.presentation.apply(emily, ['friendly', 'afternoon']);
+
+var johnFriendly = john.presentation.bind(john, 'friendly');
+
+johnFriendly('morning');
+johnFriendly('night');
+
+var emilyFormal = john.presentation.bind(emily, 'formal');
+emilyFormal('afternoon');
+
+
+// Another cool example
+var years = [1990, 1965, 1937, 2005, 1998];
+
+function arrayCalc(arr, fn) {
+    var arrRes = [];
+    for (var i = 0; i < arr.length; i++) {
+        arrRes.push(fn(arr[i]));
+    }
+    return arrRes;
 }
 
-// This is Expression
-///////////////////////////////
+function calculateAge(el) {
+    return 2016 - el;
+}
+
+function isFullAge(limit, el) {
+    return el >= limit;
+}
+
+var ages = arrayCalc(years, calculateAge);
+var fullJapan = arrayCalc(ages, isFullAge.bind(this, 20));
+console.log(ages);
+console.log(fullJapan);
 */
 
-////////////////////////////////////////////////
-// Lecture: Array
 
-var names = ['John', 'Jane', 'Mark'];
-var years = new Array(1990, 1969, 1948);
 
-console.log(names[1]);
-names[1] = 'Ben';
-console.log(names[1]);
-console.log(names);
 
-var john = ['John', 'Smith', 1990, 'teacher', false];
-john.push('blue');
-john.unshift('Mr. ')
-john.pop();
-john.shift();
-john.indexOf('Smith');
-console.log(john);
+/////////////////////////////
+// CODING CHALLENGE
 
-if (john.indexOf('teacher') === -1){
-	console.log('John is not a teacher');
-} else {
-	console.log('John is a teacher');
-}
+
+/*
+--- Let's build a fun quiz game in the console! ---
+
+1. Build a function constructor called Question to describe a question. A question should include:
+a) question itself
+b) the answers from which the player can choose the correct one (choose an adequate data structure here, array, object, etc.)
+c) correct answer (I would use a number for this)
+
+2. Create a couple of questions using the constructor
+
+3. Store them all inside an array
+
+4. Select one random question and log it on the console, together with the possible answers (each question should have a number) (Hint: write a method for the Question objects for this task).
+
+5. Use the 'prompt' function to ask the user for the correct answer. The user should input the number of the correct answer such as you displayed it on Task 4.
+
+6. Check if the answer is correct and print to the console whether the answer is correct ot nor (Hint: write another method for this).
+
+7. Suppose this code would be a plugin for other programmers to use in their code. So make sure that all your code is private and doesn't interfere with the other programmers code (Hint: we learned a special technique to do exactly that).
+*/
+
+
+/*
+(function() {
+    function Question(question, answers, correct) {
+        this.question = question;
+        this.answers = answers;
+        this.correct = correct;
+    }
+
+    Question.prototype.displayQuestion = function() {
+        console.log(this.question);
+
+        for (var i = 0; i < this.answers.length; i++) {
+            console.log(i + ': ' + this.answers[i]);
+        }
+    }
+
+    Question.prototype.checkAnswer = function(ans) {
+        if (ans === this.correct) {
+            console.log('Correct answer!');
+
+        } else {
+            console.log('Wrong answer. Try again :)')
+        }
+    }
+
+    var q1 = new Question('Is JavaScript the coolest programming language in the world?',
+                          ['Yes', 'No'],
+                          0);
+
+    var q2 = new Question('What is the name of this course\'s teacher?',
+                          ['John', 'Micheal', 'Jonas'],
+                          2);
+
+    var q3 = new Question('What does best describe coding?',
+                          ['Boring', 'Hard', 'Fun', 'Tediuos'],
+                          2);
+
+    var questions = [q1, q2, q3];
+
+    var n = Math.floor(Math.random() * questions.length);
+
+    questions[n].displayQuestion();
+
+    var answer = parseInt(prompt('Please select the correct answer.'));
+
+    questions[n].checkAnswer(answer);
+})();
+*/
+
+
+
+/*
+--- Expert level ---
+
+8. After you display the result, display the next random question, so that the game never ends (Hint: write a function for this and call it right after displaying the result)
+
+9. Be careful: after Task 8, the game literally never ends. So include the option to quit the game if the user writes 'exit' instead of the answer. In this case, DON'T call the function from task 8.
+
+10. Track the user's score to make the game more fun! So each time an answer is correct, add 1 point to the score (Hint: I'm going to use the power of closures for this, but you don't have to, just do this with the tools you feel more comfortable at this point).
+
+11. Display the score in the console. Use yet another method for this.
+*/
+
+
+/*
+(function() {
+    function Question(question, answers, correct) {
+        this.question = question;
+        this.answers = answers;
+        this.correct = correct;
+    }
+
+    Question.prototype.displayQuestion = function() {
+        console.log(this.question);
+
+        for (var i = 0; i < this.answers.length; i++) {
+            console.log(i + ': ' + this.answers[i]);
+        }
+    }
+
+    Question.prototype.checkAnswer = function(ans, callback) {
+        var sc;
+        
+        if (ans === this.correct) {
+            console.log('Correct answer!');
+            sc = callback(true);
+        } else {
+            console.log('Wrong answer. Try again :)');
+            sc = callback(false);
+        }
+        
+        this.displayScore(sc);
+    }
+
+    Question.prototype.displayScore = function(score) {
+        console.log('Your current score is: ' + score);
+        console.log('------------------------------');
+    }
+    
+    
+    var q1 = new Question('Is JavaScript the coolest programming language in the world?',
+                          ['Yes', 'No'],
+                          0);
+
+    var q2 = new Question('What is the name of this course\'s teacher?',
+                          ['John', 'Micheal', 'Jonas'],
+                          2);
+
+    var q3 = new Question('What does best describe coding?',
+                          ['Boring', 'Hard', 'Fun', 'Tediuos'],
+                          2);
+    
+    var questions = [q1, q2, q3];
+    
+    function score() {
+        var sc = 0;
+        return function(correct) {
+            if (correct) {
+                sc++;
+            }
+            return sc;
+        }
+    }
+    var keepScore = score();
+    
+    
+    function nextQuestion() {
+
+        var n = Math.floor(Math.random() * questions.length);
+        questions[n].displayQuestion();
+
+        var answer = prompt('Please select the correct answer.');
+
+        if(answer !== 'exit') {
+            questions[n].checkAnswer(parseInt(answer), keepScore);
+            
+            nextQuestion();
+        }
+    }
+    
+    nextQuestion();
+    
+})();
+*/
